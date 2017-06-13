@@ -1,15 +1,19 @@
 import { combineReducers } from 'redux'
 import cart, * as fromCart from './cart'
 import items, * as fromItem from './items'
+import pagination, * as fromPagination from './pagination'
 
 export default combineReducers({
   items,
-  cart
+  cart,
+  pagination
 })
 const getItem = (state, id) => fromItem.getItem(state.items, id)
 const getAddedItemId = state => fromCart.getAddedItemId(state.cart)
 const getQtyItem = (state, id) => fromCart.getQtyItem(state.cart, id)
 
+const getLimit = state => fromPagination.getLimit(state.pagination)
+const getSkip = state => fromPagination.getSkip(state.pagination)
 
 export const getTotal = state =>
   getAddedItemId(state).reduce((total, id) =>
@@ -22,3 +26,8 @@ export const getCartItems = state =>
       quantity: getQtyItem(state, id)
     })
   )
+
+export const getPagination = state => ({
+  limit: getLimit(state),
+  skip: getSkip(state)
+})

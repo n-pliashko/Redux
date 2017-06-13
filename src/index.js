@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import reducer from './reducers'
-import { getAllItems } from './actions'
+import { getAllItems, loadPagination } from './actions'
 import App from './containers/App'
 
 import ('bootstrap/dist/css/bootstrap.min.css');
@@ -20,6 +20,7 @@ const store = createStore(
   applyMiddleware(...middleware)
 )
 
+store.dispatch(loadPagination())
 store.dispatch(getAllItems())
 
 render(
