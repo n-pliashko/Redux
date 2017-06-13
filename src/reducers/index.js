@@ -31,3 +31,8 @@ export const getPagination = state => ({
   limit: getLimit(state),
   skip: getSkip(state)
 })
+
+
+export const getTotalItems = state => ({
+  total: state.total
+})

@@ -12,7 +12,6 @@ const items = (state, action) => {
   }
 }
 
-
 const itemById = (state = {}, action) => {
   switch (action.type) {
     case ITEMS_LIST_SUCCESS:

@@ -1,8 +1,9 @@
-import { ITEMS_LIST_REQUEST, LOAD_NEXT_ITEMS, LOAD_PREVIOUS_ITEMS } from '../constants/actionType'
+import { ITEMS_LIST_REQUEST, LOAD_NEXT_ITEMS, LOAD_PREVIOUS_ITEMS, ITEMS_LIST_SUCCESS} from '../constants/actionType'
 
 const initialState = {
   skip: 0,
-  limit: 50
+  limit: 50,
+  total: 0
 }
 
 const skip = (state = initialState.skip, action) => {
@@ -23,7 +24,18 @@ const skip = (state = initialState.skip, action) => {
 
 const limit = (state = initialState.limit, action) => {
   return state;
+}
 
+const total = (state = initialState.total, action) => {
+  switch (action.type) {
+    case ITEMS_LIST_SUCCESS: {
+      const {total} = action;
+      return total
+    }
+    default: {
+      return state;
+    }
+  }
 }
 
 export const getSkip = state => state.skip
@@ -37,7 +49,8 @@ const pagination = (state = initialState , action) => {
     default:
       return {
         skip: skip(state.skip, action),
-        limit: limit(state.limit, action)
+        limit: limit(state.limit, action),
+        total: total(state.total, action)
       }
   }
 }

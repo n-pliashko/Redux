@@ -6,10 +6,12 @@ export const getAllItems = () => (dispatch, getState) => {
     .then(response => response.json())
     .then(json => dispatch({
       type: types.ITEMS_LIST_SUCCESS,
-      items: json
+      items: json.items,
+      total: json.total
     })).catch(() => dispatch({
-    type: types.ITEMS_LIST_FAILURE,
-    items: {}
+      type: types.ITEMS_LIST_FAILURE,
+      items: {},
+      total: 0
   }));
 }
 
