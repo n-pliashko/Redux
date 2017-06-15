@@ -39,7 +39,8 @@ const total = (state = initialState.total, action) => {
 }
 
 export const getSkip = state => state.skip
-export const getLimit = state =>  state.limit
+export const getLimit = state => state.limit
+export const getTotal = state => state.total
 
 const pagination = (state = initialState , action) => {
   switch (action.type) {

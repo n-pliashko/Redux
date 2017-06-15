@@ -1,38 +1,57 @@
 import React from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ItemList from '../components/ItemList'
 import ProductItem from '../components/ProductItem'
 import {getItems} from '../reducers/items'
-import { addToCart } from '../actions'
+import { addToCart, scroll } from '../actions'
 
-const ItemContainer = ({items, addToCart}) => (
-  <ItemList>
-    {items.map( item =>
-    <ProductItem key={item.id}
-                 item={item}
-                 onAddToCartClicked={() => addToCart(item.id)}/>
-    )}
-  </ItemList>
-)
+import { bindActionCreators } from 'redux'
+
+class ItemContainer extends Component {
+  componentDidUpdate() {
+    let {dispatch} = this.props
+    dispatch(scroll())
+  }
+
+  render () {
+    let {items, addToCart} = this.props
+     return  <ItemList>
+       {items.map( item =>
+         <ProductItem key={item.id}
+                      item={item}
+                      onAddToCartClicked={() => addToCart(item.id)}/>
+       )}
+     </ItemList>
+  }
+}
 
 ItemContainer.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    designer: PropTypes.string.isRequired,
-    count_options: PropTypes.string.isRequired,
+    designer_name: PropTypes.string.isRequired,
+    model_name: PropTypes.string.isRequired,
+    count_options: PropTypes.number.isRequired,
     price: PropTypes.string.isRequired
   })).isRequired,
   addToCart: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-  items: getItems(state.items)
-})
+    items: getItems(state.items)
+  })
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addToCart: bindActionCreators(addToCart, dispatch),
+    dispatch
+  }
+}
 
 export default connect(
   mapStateToProps,
-  {addToCart}
+  mapDispatchToProps
 )(ItemContainer)
