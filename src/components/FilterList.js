@@ -2,7 +2,7 @@ import React from 'react'
 
 const FilterList = ({ filterName, categories, title, clear, onChooseFilter, clearFilter, addedFilterId, checkbox = true }) => {
   return (
-    <div id="categories">
+    <div>
       <div className="refine-control-header">
         <span className="headTitle"><a>{title}</a></span>
         <span className="subClearLink">

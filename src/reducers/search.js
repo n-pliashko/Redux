@@ -1,18 +1,24 @@
-import { NAVIGATION_START, FILTER_SUCESS } from '../constants/actionType'
+import { NAVIGATION_START, FILTER_SUCESS, SEARCH } from '../constants/actionType'
 
 const initialState = {
   params: {},
   query: ''
 }
 
-const query = (state = initialState.query, action) => {
+const query = (state = initialState, action) => {
   switch (action.type) {
+    case SEARCH: {
+      const {query} = action;
+      return query.length > 0 ?  '?q=' + query : ''
+    }
     case NAVIGATION_START: {
       const {location} = action;
-      return getLocationObject(location).search
+      let _query = getLocationObject(location).search
+      let params = parseQueryString(_query)
+      return params['q'] ? '?q=' + params['q'] : ''
     }
     default: {
-      return state;
+      return state.query;
     }
   }
 }
@@ -55,7 +61,7 @@ const parseQueryString = queryString => {
 
 const search = (state = initialState , action) => {
   return {
-    query: query(state.query, action),
+    query: query(state, action),
     params: params(state.query, action)
   }
 }

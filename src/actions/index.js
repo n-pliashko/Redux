@@ -34,15 +34,15 @@ export const getAllFilters = () => (dispatch, getState) => {
 }
 
 export const getAllItems = () => (dispatch, getState) => {
-  const {pagination, search} = getState();
+  const {pagination, filter} = getState();
 
   let data = {
     skip: pagination.skip,
     limit: pagination.limit,
   }
 
-  if ((search.params).length > 0) {
-    Object.assign(data, {search: 1}, search.params)
+  if (Object.keys(filter.addedFilterId).length > 0) {
+    Object.assign(data, filter.addedFilterId)
   }
 
   fetch('http://ssyii/web/site/items?' + serialize(data)).then(response => response.json())
@@ -73,8 +73,12 @@ export const addToFilter = (filterName, filterId, onlyOne) => (dispatch, getStat
     filterId,
     onlyOne
   })
+}
+
+export const applyFilter = () => (dispatch, getState) => {
   const {filter} = getState()
   dispatch({type: types.FILTER_SUCESS, filter})
+  dispatch(getAllItems())
 }
 
 export const clearFilter = (filterName) => (dispatch, getState) => {
@@ -82,8 +86,6 @@ export const clearFilter = (filterName) => (dispatch, getState) => {
     type: types.CLEAR_FILTER,
     filterName
   })
-  const {filter} = getState()
-  dispatch({type: types.FILTER_SUCESS, filter})
 }
 
 export const checkout = items => (dispatch, getState) => {

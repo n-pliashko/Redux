@@ -43,3 +43,8 @@ export const getPagination = state => ({
   skip: getSkip(state),
   total: getTotalItems(state)
 })
+
+
+export const isHhistoryApiAvailable = () => {
+  return !!(window.history && window.history.pushState);
+}

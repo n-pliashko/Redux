@@ -13,19 +13,18 @@ class SearchContainer extends Component {
   }
 
   handleInputChange(e) {
-    const { dispatch } = this.props
+    const { dispatch, filter, search } = this.props
     const target = e.target;
     const value = target.value;
     let keyword = value.replace(/\s{2,}/g,' ');
     keyword = keyword.replace(/\s/g, "+");
-    let _search = keyword.length > 0 ?  '?q=' + keyword : '';
     this.setState({searchText: value})
-    dispatch({type: SEARCH, search: _search})
+    dispatch({type: SEARCH, query: keyword, filter, search})
   }
 
   handleSubmit(e) {
     e.preventDefault()
-    const {search} = this.props
+    const {onSearch} = this.props
   }
 
   render () {
@@ -50,7 +49,7 @@ const mapStateToProps = state => ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    search: bindActionCreators(search, dispatch),
+    onSearch: bindActionCreators(search, dispatch),
     dispatch
   }
 }
