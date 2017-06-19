@@ -42,7 +42,7 @@ ItemContainer.propTypes = {
     description: PropTypes.string.isRequired,
     designer_name: PropTypes.string.isRequired,
     model_name: PropTypes.string.isRequired,
-    count_options: PropTypes.number.isRequired,
+    count_options: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired
   })).isRequired,
   addToCart: PropTypes.func.isRequired

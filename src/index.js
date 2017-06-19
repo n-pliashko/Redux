@@ -20,7 +20,7 @@ const store = createStore(
   applyMiddleware(...middleware)
 )
 
-store.dispatch(action.getAllFilters())
+//store.dispatch(action.getAllFilters())
 store.dispatch(action.loadPagination())
 store.dispatch(action.loadNavigation())
 store.dispatch(action.getAllItems())

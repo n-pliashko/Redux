@@ -25,7 +25,7 @@ Item.propTypes = {
   description: PropTypes.string,
   designer_name: PropTypes.string,
   model_name: PropTypes.string,
-  count_options: PropTypes.number,
+  count_options: PropTypes.string,
   price: PropTypes.string
 }
 export default Item

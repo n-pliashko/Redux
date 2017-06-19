@@ -8,7 +8,9 @@ const serialize = data => {
 };
 
 export const getAllFilters = () => (dispatch, getState) => {
-  fetch('http://ssyii/web/site/categories').then(response => response.json())
+  const {items} = getState()
+  let data = {item_ids: items.itemIds}
+  fetch('http://ssyii/web/site/categories?' + serialize(data)).then(response => response.json())
     .then(json => dispatch({
         type: types.CATEGORIES_LIST_SUCCESS,
         categories: json.categories,
@@ -20,10 +22,10 @@ export const getAllFilters = () => (dispatch, getState) => {
     total: 0
   }));
 
-  fetch('http://ssyii/web/site/designers').then(response => response.json())
+  fetch('http://ssyii/web/site/designers?' + serialize(data)).then(response => response.json())
     .then(json => dispatch({
         type: types.DESIGNERS_LIST_SUCCESS,
-      designers: json.designers,
+        designers: json.designers,
         total: json.total
       })
     ).catch(() => dispatch({
@@ -50,15 +52,15 @@ export const getAllItems = () => (dispatch, getState) => {
 
   fetch('http://ssyii/web/site/items?' + serialize(data)).then(response => response.json())
     .then(json => dispatch({
-      type: types.ITEMS_LIST_SUCCESS,
-      items: json.items,
-      total: json.total
-    })
+        type: types.ITEMS_LIST_SUCCESS,
+        items: json.items,
+        total: json.total
+      })
     ).catch(() => dispatch({
-      type: types.ITEMS_LIST_FAILURE,
-      items: {},
-      total: 0
-  }));
+    type: types.ITEMS_LIST_FAILURE,
+    items: {},
+    total: 0
+  })).then(() => dispatch(getAllFilters()));
 }
 
 export const addToCart = itemId => (dispatch, getState) => {
