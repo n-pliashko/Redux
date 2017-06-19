@@ -1,4 +1,4 @@
-import { NAVIGATION_START, FILTER_SUCESS, SEARCH } from '../constants/actionType'
+import { NAVIGATION_START, INPUT_SEARCH_TEXT } from '../constants/actionType'
 
 const initialState = {
   params: {},
@@ -7,7 +7,7 @@ const initialState = {
 
 const query = (state = initialState, action) => {
   switch (action.type) {
-    case SEARCH: {
+    case INPUT_SEARCH_TEXT: {
       const {query} = action;
       return query.length > 0 ?  '?q=' + query : ''
     }
@@ -30,9 +30,10 @@ const params = (state = initialState.params, action) => {
       let _query = getLocationObject(location).search;
       return parseQueryString(_query)
     }
-    case FILTER_SUCESS: {
-      const {filter} = action;
-      return filter.addedFilterId
+    case INPUT_SEARCH_TEXT: {
+      const {query} = action;
+      let _text = query.length > 0 ?  '?q=' + query : ''
+      return parseQueryString(_text)
     }
     default: {
       return parseQueryString(state)

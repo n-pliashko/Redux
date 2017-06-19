@@ -34,7 +34,7 @@ export const getAllFilters = () => (dispatch, getState) => {
 }
 
 export const getAllItems = () => (dispatch, getState) => {
-  const {pagination, filter} = getState();
+  const {pagination, filter, search} = getState();
 
   let data = {
     skip: pagination.skip,
@@ -44,6 +44,9 @@ export const getAllItems = () => (dispatch, getState) => {
   if (Object.keys(filter.addedFilterId).length > 0) {
     Object.assign(data, filter.addedFilterId)
   }
+
+  if (search.params['q'] && search.params['q'].length > 0)
+    Object.assign(data, {q: search.params['q']})
 
   fetch('http://ssyii/web/site/items?' + serialize(data)).then(response => response.json())
     .then(json => dispatch({
@@ -76,8 +79,8 @@ export const addToFilter = (filterName, filterId, onlyOne) => (dispatch, getStat
 }
 
 export const applyFilter = () => (dispatch, getState) => {
-  const {filter} = getState()
-  dispatch({type: types.FILTER_SUCESS, filter})
+  const {filter, search} = getState()
+  dispatch({type: types.FILTER_SUCESS, filter, search})
   dispatch(getAllItems())
 }
 
@@ -145,7 +148,14 @@ export const scroll = () => (dispatch, getState) => {
 }
 
 
-export const search = text => (dispatch, getState) => {
+export const search = () => (dispatch, getState) => {
+  const { filter, search } = getState()
+  dispatch({
+    type: types.SEARCH,
+    search,
+    filter
+  })
 
+  dispatch(getAllItems())
 }
 

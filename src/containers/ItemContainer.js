@@ -10,20 +10,28 @@ import { addToCart, scroll } from '../actions'
 import { bindActionCreators } from 'redux'
 
 class ItemContainer extends Component {
-  componentDidUpdate() {
+  componentDidUpdate () {
     let {dispatch} = this.props
     dispatch(scroll())
   }
 
   render () {
     let {items, addToCart} = this.props
-     return  <ItemList>
-       {items.map( item =>
-         <ProductItem key={item.id}
-                      item={item}
-                      onAddToCartClicked={() => addToCart(item.id)}/>
-       )}
-     </ItemList>
+    let container = ''
+    if (!items.length) {
+      container = <center>
+        <h3>Sorry, not found items.</h3>
+      </center>;
+    } else {
+      container = items.map(item =>
+        <ProductItem key={item.id}
+                     item={item}
+                     onAddToCartClicked={() => addToCart(item.id)}/>
+      )
+    }
+    return <ItemList>
+      {container}
+    </ItemList>
   }
 }
 

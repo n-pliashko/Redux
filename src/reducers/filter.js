@@ -1,4 +1,4 @@
-import { CHOOSE_FILTER, CLEAR_FILTER, NAVIGATION_COMPLETE, SEARCH } from '../constants/actionType'
+import { CHOOSE_FILTER, CLEAR_FILTER, NAVIGATION_COMPLETE } from '../constants/actionType'
 import { isHhistoryApiAvailable } from '../reducers'
 
 const initialState = {
@@ -13,9 +13,12 @@ const parseQueryString = queryString => {
     if (temp.length > 1) {
       params[temp[0]] = []
       temp[1].split(',').forEach(id => {
-        let _id = id.trim()
-        let val = parseInt(_id)
-        params[temp[0]].push(!isNaN(val) ? val : _id)
+        let val = parseInt(id.trim())
+        if (!isNaN(val))
+          params[temp[0]].push(val)
+        else {
+          delete  params[temp[0]]
+        }
       });
     }
   }
@@ -24,13 +27,6 @@ const parseQueryString = queryString => {
 
 const addedFilterId = (state = initialState.addedFilterId, action) => {
   switch (action.type) {
-    case SEARCH: {
-      const {query} = action
-      if (state['q']) {
-        return {...state, q: [query]}
-      }
-      return state
-    }
     case CHOOSE_FILTER: {
       const {filterName, filterId, onlyOne} = action;
       if (state[filterName] && !!!onlyOne) {

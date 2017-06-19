@@ -28,5 +28,5 @@ export const CHOOSE_FILTER = 'CHOOSE_FILTER'
 export const CLEAR_FILTER = 'CLEAR_FILTER'
 export const FILTER_SUCESS = 'FILTER_SUCESS'
 
-
+export const INPUT_SEARCH_TEXT = 'INPUT_SEARCH_TEXT'
 export const SEARCH = 'SEARCH'

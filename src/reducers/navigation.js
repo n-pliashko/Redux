@@ -11,14 +11,14 @@ const initialState = {
   transitioning: false
 }
 
-const getSearchString = addedFilterId => {
+const getSearchString = (addedFilterId, withSign = true) => {
   let params = []
   for (let key in addedFilterId) {
-    let values = addedFilterId[key].join(',');
+    let values = Array.isArray(addedFilterId[key]) ? addedFilterId[key].join(',') : addedFilterId[key];
     if (values.length > 0)
-      params.push(key + '=' + addedFilterId[key].join(','))
+      params.push(key + '=' + values)
   }
-  return (params.length > 0 ? '?' + params.join('&') : '')
+  return (params.length > 0 ? (withSign ? '?' : '' ) + params.join('&') : '')
 }
 
 const navigation = (state = initialState, action) => {
@@ -30,9 +30,12 @@ const navigation = (state = initialState, action) => {
       }
     }
     case SEARCH: {
-      const {filter} = action;
+      const {filter, search} = action;
       let _hash = state.hash
       let _search = getSearchString(filter.addedFilterId)
+      let sign = _search.length > 0 ? '&' : '?'
+      let _search_q = getSearchString(search.params, false)
+      _search += _search_q.length > 0 ? sign + _search_q : ''
       let location = state.protocol + '//' + state.host + state.pathname
 
       if (isHhistoryApiAvailable) {
@@ -59,9 +62,12 @@ const navigation = (state = initialState, action) => {
       }
     }
     case FILTER_SUCESS: {
-      const {filter} = action;
+      const {filter, search} = action;
       let _hash = state.hash
       let _search = getSearchString(filter.addedFilterId)
+      let sign = _search.length > 0 ? '&' : '?'
+      let _search_q = getSearchString(search.params, false)
+      _search += _search_q.length > 0 ? sign + _search_q : ''
       let location = state.protocol + '//' + state.host + state.pathname
 
       if (isHhistoryApiAvailable) {
