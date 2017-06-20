@@ -1,46 +1,12 @@
 import * as types from '../constants/actionType'
 
-
-const serialize = data => {
-  return Object.keys(data).map(function (keyName) {
-    return encodeURIComponent(keyName) + '=' + encodeURIComponent(data[keyName])
-  }).join('&');
-};
-
-export const getAllFilters = () => (dispatch, getState) => {
-  const {items} = getState()
-  let data = {item_ids: items.itemIds}
-  fetch('http://ssyii/web/site/categories?' + serialize(data)).then(response => response.json())
-    .then(json => dispatch({
-        type: types.CATEGORIES_LIST_SUCCESS,
-        categories: json.categories,
-        total: json.total
-      })
-    ).catch(() => dispatch({
-    type: types.CATEGORIES_LIST_FAILURE,
-    categories: {},
-    total: 0
-  }));
-
-  fetch('http://ssyii/web/site/designers?' + serialize(data)).then(response => response.json())
-    .then(json => dispatch({
-        type: types.DESIGNERS_LIST_SUCCESS,
-        designers: json.designers,
-        total: json.total
-      })
-    ).catch(() => dispatch({
-    type: types.DESIGNERS_LIST_FAILURE,
-    designers: {},
-    total: 0
-  }));
-}
-
 export const getAllItems = () => (dispatch, getState) => {
   const {pagination, filter, search} = getState();
 
   let data = {
     skip: pagination.skip,
     limit: pagination.limit,
+    onlyItems: 1
   }
 
   if (Object.keys(filter.addedFilterId).length > 0) {
@@ -50,17 +16,75 @@ export const getAllItems = () => (dispatch, getState) => {
   if (search.params['q'] && search.params['q'].length > 0)
     Object.assign(data, {q: search.params['q']})
 
-  fetch('http://ssyii/web/site/items?' + serialize(data)).then(response => response.json())
+  let form = new FormData();
+  Object.keys(data).map(key => (
+    form.append(key, data[key])
+  ))
+
+  let dataRequest = {
+    method: 'POST',
+    headers: new Headers({
+      'X-Requested-With': 'XMLHttpRequest'
+    }),
+    body: form
+  }
+  fetch('http://ssyii/web/site/catalogue_search', dataRequest).then(response => response.json())
     .then(json => dispatch({
-        type: types.ITEMS_LIST_SUCCESS,
+        type: types.REQUEST_SUCCESS,
         items: json.items,
-        total: json.total
+        total: json.total,
+        min_price: json.min_price,
+        max_price: json.max_price
       })
     ).catch(() => dispatch({
-    type: types.ITEMS_LIST_FAILURE,
-    items: {},
-    total: 0
-  })).then(() => dispatch(getAllFilters()));
+        type: types.REQUEST_FAILURE,
+        items: {},
+        total: 0,
+        min_price: '',
+        max_price: ''
+  }))
+}
+
+export const getAllFilters = () => (dispatch, getState) => {
+  const {pagination, filter, search} = getState();
+
+  let data = {
+    skip: pagination.skip,
+    limit: pagination.limit,
+    onlyFilters: 1
+  }
+
+  if (Object.keys(filter.addedFilterId).length > 0) {
+    Object.assign(data, filter.addedFilterId)
+  }
+
+  if (search.params['q'] && search.params['q'].length > 0)
+    Object.assign(data, {q: search.params['q']})
+
+  let form = new FormData();
+  Object.keys(data).map(key => (
+    form.append(key, data[key])
+  ))
+
+  let dataRequest = {
+    method: 'POST',
+    headers: new Headers({
+      'X-Requested-With': 'XMLHttpRequest',
+    }),
+    body: form
+  }
+
+  fetch('http://ssyii/web/site/catalogue_search', dataRequest).then(response => response.json())
+    .then(json => dispatch({
+        type: types.FILTER_REQUEST_SUCCESS,
+        designers: json.designers,
+        categories: json.categories
+      })
+    ).catch(() => dispatch({
+    type: types.FILTER_REQUEST_FAILURE,
+    designers: {},
+    categories: {}
+  }))
 }
 
 export const addToCart = itemId => (dispatch, getState) => {
@@ -78,11 +102,13 @@ export const addToFilter = (filterName, filterId, onlyOne) => (dispatch, getStat
     filterId,
     onlyOne
   })
+  dispatch(getAllFilters())
 }
 
 export const applyFilter = () => (dispatch, getState) => {
   const {filter, search} = getState()
-  dispatch({type: types.FILTER_SUCESS, filter, search})
+  dispatch({type: types.FILTER_SUCCESS, filter, search})
+  dispatch(getAllFilters())
   dispatch(getAllItems())
 }
 
@@ -91,6 +117,7 @@ export const clearFilter = (filterName) => (dispatch, getState) => {
     type: types.CLEAR_FILTER,
     filterName
   })
+  dispatch(getAllFilters())
 }
 
 export const checkout = items => (dispatch, getState) => {
@@ -158,6 +185,7 @@ export const search = () => (dispatch, getState) => {
     filter
   })
 
+  dispatch(getAllFilters())
   dispatch(getAllItems())
 }
 

@@ -1,4 +1,4 @@
-import { CHOOSE_FILTER, CLEAR_FILTER, NAVIGATION_COMPLETE } from '../constants/actionType'
+import { CHOOSE_FILTER, CLEAR_FILTER, NAVIGATION_COMPLETE, REQUEST_SUCCESS } from '../constants/actionType'
 import { isHhistoryApiAvailable } from '../reducers'
 
 const initialState = {
@@ -8,7 +8,7 @@ const initialState = {
 const parseQueryString = queryString => {
   let params = {}, queries, temp, i, l;
   queries = queryString.split("&");
-  for ( i = 0, l = queries.length; i < l; i++ ) {
+  for (i = 0, l = queries.length; i < l; i++) {
     temp = queries[i].split('=');
     if (temp.length > 1) {
       params[temp[0]] = []
@@ -23,10 +23,18 @@ const parseQueryString = queryString => {
     }
   }
   return params;
-};
+}
 
 const addedFilterId = (state = initialState.addedFilterId, action) => {
   switch (action.type) {
+    case REQUEST_SUCCESS: {
+      const {min_price, max_price} = action;
+      if (state['price_from'] && state['price_to'])
+        return state;
+      let _min_price = parseFloat(min_price).toFixed(2),
+        _max_price = (parseFloat(max_price) + 1).toFixed(2)
+      return {...state, price_from: _min_price, price_to: _max_price}
+    }
     case CHOOSE_FILTER: {
       const {filterName, filterId, onlyOne} = action;
       if (state[filterName] && !!!onlyOne) {
@@ -37,7 +45,7 @@ const addedFilterId = (state = initialState.addedFilterId, action) => {
         values.splice(index, 1)
         return {...state, [filterName]: values}
       }
-      return {...state, [filterName]: [filterId]}
+      return {...state, [filterName]: filterId}
     }
     case NAVIGATION_COMPLETE: {
       const {navigation} = action

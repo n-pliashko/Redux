@@ -1,8 +1,8 @@
-import { ITEMS_LIST_REQUEST, LOAD_NEXT_ITEMS, LOAD_PREVIOUS_ITEMS, ITEMS_LIST_SUCCESS} from '../constants/actionType'
+import { ITEMS_LIST_REQUEST, LOAD_NEXT_ITEMS, LOAD_PREVIOUS_ITEMS, REQUEST_SUCCESS} from '../constants/actionType'
 
 const initialState = {
   skip: 0,
-  limit: 50,
+  limit: 60,
   total: 0
 }
 
@@ -28,7 +28,7 @@ const limit = (state = initialState.limit, action) => {
 
 const total = (state = initialState.total, action) => {
   switch (action.type) {
-    case ITEMS_LIST_SUCCESS: {
+    case REQUEST_SUCCESS: {
       const {total} = action;
       return total
     }

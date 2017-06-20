@@ -1,4 +1,4 @@
-import { ITEMS_LIST_SUCCESS, NAVIGATION_START, FILTER_SUCESS, SEARCH } from '../constants/actionType'
+import { REQUEST_SUCCESS, NAVIGATION_START, FILTER_SUCCESS, SEARCH } from '../constants/actionType'
 import { isHhistoryApiAvailable } from '../reducers'
 
 const initialState = {
@@ -23,7 +23,7 @@ const getSearchString = (addedFilterId, withSign = true) => {
 
 const navigation = (state = initialState, action) => {
   switch (action.type) {
-    case ITEMS_LIST_SUCCESS: {
+    case REQUEST_SUCCESS: {
       return {
         ...state,
         transitioning: true
@@ -61,7 +61,7 @@ const navigation = (state = initialState, action) => {
         location: action.location
       }
     }
-    case FILTER_SUCESS: {
+    case FILTER_SUCCESS: {
       const {filter, search} = action;
       let _hash = state.hash
       let _search = getSearchString(filter.addedFilterId)

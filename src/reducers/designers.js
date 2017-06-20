@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import { DESIGNERS_LIST_SUCCESS } from '../constants/actionType'
+import { FILTER_REQUEST_SUCCESS } from '../constants/actionType'
 
 const designers = (state, action) => {
   switch (action.type) {
-    case DESIGNERS_LIST_SUCCESS:
+    case FILTER_REQUEST_SUCCESS:
       return {
         ...state
       }
@@ -14,7 +14,7 @@ const designers = (state, action) => {
 
 const designerById = (state = {}, action) => {
   switch (action.type) {
-    case DESIGNERS_LIST_SUCCESS:
+    case FILTER_REQUEST_SUCCESS:
       return {
         ...state,
         ...action.designers.reduce((obj, designer) => {
@@ -36,7 +36,7 @@ const designerById = (state = {}, action) => {
 
 const designerIDs = (state = [], action) => {
   switch (action.type) {
-    case DESIGNERS_LIST_SUCCESS:
+    case FILTER_REQUEST_SUCCESS:
       return action.designers.map(designer => designer.id)
     default:
       return state

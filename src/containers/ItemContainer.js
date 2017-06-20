@@ -20,7 +20,7 @@ class ItemContainer extends Component {
     let container = ''
     if (!items.length) {
       container = <center>
-        <h3>Sorry, not found items.</h3>
+        <h3>Sorry, no products matched your search. Please try another search term.</h3>
       </center>;
     } else {
       container = items.map(item =>

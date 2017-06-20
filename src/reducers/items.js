@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import { ITEMS_LIST_SUCCESS } from '../constants/actionType'
+import { REQUEST_SUCCESS } from '../constants/actionType'
 
 const items = (state, action) => {
   switch (action.type) {
-    case ITEMS_LIST_SUCCESS:
+    case REQUEST_SUCCESS:
       return {
         ...state
       }
@@ -14,7 +14,7 @@ const items = (state, action) => {
 
 const itemById = (state = {}, action) => {
   switch (action.type) {
-    case ITEMS_LIST_SUCCESS:
+    case REQUEST_SUCCESS:
       return {
         ...state,
         ...action.items.reduce((obj, item) => {
@@ -36,7 +36,7 @@ const itemById = (state = {}, action) => {
 
 const itemIds = (state = [], action) => {
   switch (action.type) {
-    case ITEMS_LIST_SUCCESS:
+    case REQUEST_SUCCESS:
       return action.items.map(item => item.id)
     default:
       return state

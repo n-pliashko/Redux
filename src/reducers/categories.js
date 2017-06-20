@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import { CATEGORIES_LIST_SUCCESS } from '../constants/actionType'
+import { FILTER_REQUEST_SUCCESS } from '../constants/actionType'
 
 const categories = (state, action) => {
   switch (action.type) {
-    case CATEGORIES_LIST_SUCCESS:
+    case FILTER_REQUEST_SUCCESS:
       return {
         ...state
       }
@@ -14,7 +14,7 @@ const categories = (state, action) => {
 
 const categoryById = (state = {}, action) => {
   switch (action.type) {
-    case CATEGORIES_LIST_SUCCESS:
+    case FILTER_REQUEST_SUCCESS:
       return {
         ...state,
         ...action.categories.reduce((obj, category) => {
@@ -36,7 +36,7 @@ const categoryById = (state = {}, action) => {
 
 const categoryIds = (state = [], action) => {
   switch (action.type) {
-    case CATEGORIES_LIST_SUCCESS:
+    case FILTER_REQUEST_SUCCESS:
       return action.categories.map(category => category.id)
     default:
       return state
