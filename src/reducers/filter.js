@@ -45,7 +45,7 @@ const addedFilterId = (state = initialState.addedFilterId, action) => {
         values.splice(index, 1)
         return {...state, [filterName]: values}
       }
-      return {...state, [filterName]: filterId}
+      return {...state, [filterName]: [filterId]}
     }
     case NAVIGATION_COMPLETE: {
       const {navigation} = action
